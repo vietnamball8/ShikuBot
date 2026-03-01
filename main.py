@@ -59,7 +59,7 @@ class Client(commands.Bot):
         
         super().__init__(
             command_prefix='!', 
-            intents=intents
+            intents=discord.Intents.all()
         )
 
     async def setup_hook(self):
@@ -74,7 +74,7 @@ class Client(commands.Bot):
     async def on_ready(self):
         guild = discord.Object(id=GUILD_ID)
         
-        client.remove_command("help")
+        self.remove_command("help")
         self.change_status.start()
         print(f"Logged in as {self.user}!")
         print("Bot is online and ready to use.")
@@ -939,3 +939,4 @@ async def command_error(ctx, error):
 webserver.keep_alive()
 # Run the bot with the token from the environment variable
 client.run(TOKEN)
+
