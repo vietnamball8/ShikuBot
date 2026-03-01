@@ -6,7 +6,7 @@ import sys
 subprocess.Popen([sys.executable, 'main.py'])
 
 # 2. Start everything in the 'scripts' folder
-folder_path = './scripts' # Change this to your folder name
+folder_path = './cogs' # Change this to your folder name
 for filename in os.listdir(folder_path):
     if filename.endswith('.py'):
         file_path = os.path.join(folder_path, filename)
