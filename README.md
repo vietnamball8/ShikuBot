@@ -1,0 +1,2 @@
+# ShikuBot
+ShikuBot hosting Discord
