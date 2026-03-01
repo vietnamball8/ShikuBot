@@ -350,7 +350,7 @@ class Utils(commands.Cog):
                 return await ctx.send("That message is empty or contains only an image.")
 
             # Perform translation
-            result = await translator.translate(target_msg.content, dest='en')
+            result = translator.translate(target_msg.content, dest='en')
 
             # Check if the message is already in English
             if result.src == 'en':
@@ -425,4 +425,5 @@ class Utils(commands.Cog):
         
         
 async def setup(client):
+
     await client.add_cog(Utils(client=client))
