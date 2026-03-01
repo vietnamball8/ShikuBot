@@ -4,4 +4,7 @@ requests
 python-dotenv
 aiohttp
 aiomysql
-flask   
+flask
+wonderwords
+wikipedia-api
+googletrans==3.1.0a0
