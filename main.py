@@ -52,6 +52,7 @@ async def add_warning_db(user_id, guild_id, moderator, reason):
 
 class Client(commands.Bot):
     def __init__(self):
+        print("Initializing Shikubot")
         # We need message_content intent for your !hello command to work
         intents = discord.Intents.default()
         intents.message_content = True
@@ -63,6 +64,7 @@ class Client(commands.Bot):
         )
 
     async def setup_hook(self):
+        print("Setup Hook is starting")
         cogs = ["fun", "automod", "utils", "info"]
         for cog in cogs:
             try:
@@ -939,4 +941,5 @@ async def command_error(ctx, error):
 webserver.keep_alive()
 # Run the bot with the token from the environment variable
 client.run(TOKEN)
+
 
