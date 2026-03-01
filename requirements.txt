@@ -9,3 +9,4 @@ wonderwords
 wikipedia-api
 googletrans==3.1.0a0
 tzdata
+legacy-cgi
