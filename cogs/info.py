@@ -360,10 +360,12 @@ class Info(commands.Cog):
         
         except Exception as e:
             await ctx.send(f"⚠️ An error occurred: {e}")
+            print(f"DEBUG DATA: {data}")
         
 async def setup(client):
 
     await client.add_cog(Info(client=client))
+
 
 
 
