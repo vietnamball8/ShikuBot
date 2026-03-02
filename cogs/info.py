@@ -319,7 +319,7 @@ class Info(commands.Cog):
         ][:25]
         
     @commands.hybrid_command(name="holidays", description="Check upcoming public holidays!")
-    async def holidays(ctx: commands.Context, country: str = "usa"):
+    async def holidays(self, ctx: commands.Context, country: str = "india"):
         await ctx.defer() # Crucial for API calls!
         
         # 1. Format the Calendar ID
@@ -362,4 +362,5 @@ class Info(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Info(client=client))
+
 
