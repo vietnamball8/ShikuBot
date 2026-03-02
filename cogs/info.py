@@ -13,6 +13,7 @@ load_dotenv()
         
 weather_api_key = os.getenv("WEATHER_API_KEY")
 exchange_currency_api_key = os.getenv("EXCHANGE_CURRENCY_API_KEY")
+google_calendar_api_key = os.getenv("GOOGLE_CALENDAR_API_KEY")
 
 # 1. Add this list of common currencies at the top of your Cog or file
 CURRENCY_LIST = {
@@ -330,7 +331,7 @@ class Info(commands.Cog):
         now = datetime.utcnow().isoformat() + "Z" # 'Z' indicates UTC time
         url = (
                 f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events"
-                f"?key={GOOGLE_API_KEY}&timeMin={now}&maxResults=5&singleEvents=True&orderBy=startTime"
+                f"?key={google_calendar_api_key}&timeMin={now}&maxResults=5&singleEvents=True&orderBy=startTime"
             )
         
         try:
@@ -361,3 +362,4 @@ class Info(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Info(client=client))
+
