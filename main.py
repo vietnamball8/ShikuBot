@@ -748,7 +748,7 @@ async def on_reaction_clear_user_emoji(message, user, emoji):
     embed.add_field(name="Emoji", value=str(emoji), inline=True)
     await log_channel.send(embed=embed)
             
-STAFF_LOG_CHANNEL_ID = 1288061318515134485  # Private Staff Channel ID
+STAFF_LOG_CHANNEL_ID = 1477843512983814174  # Private Staff Channel ID
 
 MAX_EMOJIS = 5
 MAX_MESSAGES_FLOOD = 5
@@ -941,5 +941,6 @@ async def command_error(ctx, error):
 webserver.keep_alive()
 # Run the bot with the token from the environment variable
 client.run(TOKEN)
+
 
 
