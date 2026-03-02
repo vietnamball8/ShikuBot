@@ -318,38 +318,46 @@ class Info(commands.Cog):
         ][:25]
         
     @commands.hybrid_command(name="holidays", description="Check upcoming public holidays!")
-    async def holidays(self, ctx: commands.Context, country_code: str = "US"):
-        # Convert to uppercase just in case the user typed 'in'
-        code = country_code.upper()
+    async def holidays(ctx: commands.Context, country: str = "usa"):
+        await ctx.defer() # Crucial for API calls!
         
-        current_year = datetime.now().year
-        url = f"https://date.nager.at/api/v3/PublicHolidays/{current_year}/{code}"
+        # 1. Format the Calendar ID
+        # Common formats: en.usa, en.uk, en.canadian, en.indian
+        # Note: Some countries use their specific name (e.g., 'en.uk' vs 'en.usa')
+        calendar_id = f"en.{country.lower()}#holiday@group.v.calendar.google.com"
+            
+        # 2. Build the API URL
+        now = datetime.utcnow().isoformat() + "Z" # 'Z' indicates UTC time
+        url = (
+                f"https://www.googleapis.com/calendar/v3/calendars/{calendar_id}/events"
+                f"?key={GOOGLE_API_KEY}&timeMin={now}&maxResults=5&singleEvents=True&orderBy=startTime"
+            )
         
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    
-                    # Filter to only show holidays from TODAY onwards
-                    today_str = datetime.now().strftime("%Y-%m-%d")
-                    upcoming = [h for h in data if h['date'] >= today_str]
-
-                    if not upcoming:
-                        return await ctx.send(f"No more holidays found for `{code}` in {current_year}.")
-
-                    embed = discord.Embed(
-                        title=f"📅 {code} Holidays ({current_year})",
-                        color=discord.Color.blue()
+        try:
+            response = requests.get(url)
+            data = response.json()
+        
+            if "items" not in data:
+                return await ctx.send(f"❌ Could not find holidays for `{country}`. Try 'usa' or 'uk'.")
+        
+            # 3. Format the response into an Embed
+            embed = discord.Embed(
+                    title=f"Upcoming Holidays: {country.upper()}",
+                    color=discord.Color.blue(),
+                    timestamp=datetime.utcnow()
                     )
-
-                    # Show the next 5 upcoming holidays
-                    for holiday in upcoming[:5]:
-                        d = datetime.strptime(holiday['date'], "%Y-%m-%d").strftime("%b %d")
-                        embed.add_field(name=holiday['name'], value=f"**{d}**", inline=True)
-
-                    await ctx.send(embed=embed)
-                else:
-                    await ctx.send(f"Error {response.status}: Could not find data for `{code}`.")
+        
+            for item in data["items"]:
+                name = item.get("summary", "Unknown Holiday")
+                # Holidays are usually 'date' only, not 'dateTime'
+                start_date = item["start"].get("date", item["start"].get("dateTime"))
+                embed.add_field(name=name, value=f"📅 {start_date}", inline=False)
+        
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            await ctx.send(f"⚠️ An error occurred: {e}")
         
 async def setup(client):
+
     await client.add_cog(Info(client=client))
