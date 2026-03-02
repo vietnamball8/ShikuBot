@@ -326,7 +326,8 @@ class Info(commands.Cog):
         # 1. Format the Calendar ID
         # Common formats: en.usa, en.uk, en.canadian, en.indian
         # Note: Some countries use their specific name (e.g., 'en.uk' vs 'en.usa')
-        calendar_id = f"en.{country.lower()}#holiday@group.v.calendar.google.com"
+        country_id = country.lower().replace(" ", "_")
+        calendar_id = f"en.{country_id}#holiday@group.v.calendar.google.com"
             
         # 2. Build the API URL
         now = datetime.utcnow().isoformat() + "Z" # 'Z' indicates UTC time
@@ -363,6 +364,7 @@ class Info(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Info(client=client))
+
 
 
 
