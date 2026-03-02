@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord import app_commands
 import os
 from dotenv import load_dotenv
+import requests
 
 guild_id = 1247440062870851625
 
@@ -362,5 +363,6 @@ class Info(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Info(client=client))
+
 
 
