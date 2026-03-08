@@ -301,6 +301,7 @@ class Utils(commands.Cog):
     @app_commands.checks.has_permissions(manage_guild=True)
     async def print_msg(self, ctx: commands.Context, content: str, message_id: str):
         channel = ctx.channel
+        message_id = int(message_id)
         # Replies to the message with the given ID
         await ctx.send("Message successfully sent: ", ephemeral=True)
         await channel.send(content, reference=discord.MessageReference(channel_id=channel.id, message_id=message_id))
@@ -427,3 +428,4 @@ class Utils(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Utils(client=client))
+
