@@ -78,7 +78,7 @@ class Utils(commands.Cog):
         await ctx.send(f"Pong! {latency}ms")
         
     @commands.hybrid_command(name="embed-test", description="Responds with an embed!")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def embed(self, ctx):
         embed = discord.Embed(title="Example Embed", url="https://www.youtube.com/shorts/srdg-c9_ssQ", description="This is an example embed.", color=0x00ff00)
         embed.set_thumbnail(url="https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg")
@@ -91,7 +91,7 @@ class Utils(commands.Cog):
             
     # Embed say command
     @commands.hybrid_command(name="say-embed", description="Print an advanced embed!")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def print_embed(self, ctx: commands.Context,
                         title: str, *,
                         description: str,
@@ -143,7 +143,7 @@ class Utils(commands.Cog):
             
     # Reply with an embed to a specific message by its ID
     @commands.hybrid_command(name="reply-embed", description="Reply with an advanced embed to a specific message!")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def reply_embed(self, ctx: commands.Context,
                         message_id: str,
                         title: str, *,
@@ -196,7 +196,7 @@ class Utils(commands.Cog):
             
     # Edit an embed to a specific message by its ID
     @commands.hybrid_command(name="edit-embed", description="Edit an advanced embed to a specific message!")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def edit_embed(self, ctx: commands.Context,
                         message_id: str,
                         title: str, *,
@@ -250,7 +250,7 @@ class Utils(commands.Cog):
             
     # DM Command
     @commands.hybrid_command(name="dm", description="Send a direct message to a user")
-    @app_commands.checks.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def dm(self, ctx, user: discord.User, message: str):
         try:
             # 1. Send the message to the target user
@@ -281,7 +281,7 @@ class Utils(commands.Cog):
                 
     # Edit a specific message by its ID
     @commands.hybrid_command(name="edit", description="Edit a specific message by its ID.")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def edit_msg(self, ctx: commands.Context, content: str, message_id: str):
         channel = ctx.channel
         try:
@@ -297,8 +297,8 @@ class Utils(commands.Cog):
             await ctx.send(f"Failed to edit message: {e}", ephemeral=True)
             
     # Reply to a specific message with the message ID
-    @commands.hybrid_command(name="reply-to", description="Reply to a specific message by its ID.")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.hybrid_command(name="reply_to", description="Reply to a specific message by its ID.")
+    @commands.has_permissions(manage_guild=True)
     async def print_msg(self, ctx: commands.Context, content: str, message_id: str):
         channel = ctx.channel
         message_id = int(message_id)
@@ -313,7 +313,7 @@ class Utils(commands.Cog):
         
     # Print the message sent by the user
     @commands.hybrid_command(name="say", description="Print a message!")
-    @app_commands.checks.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def print_msg(self, ctx: commands.Context, content: str):
         channel = ctx.channel
         # Just sends a fresh message
@@ -428,4 +428,5 @@ class Utils(commands.Cog):
 async def setup(client):
 
     await client.add_cog(Utils(client=client))
+
 
