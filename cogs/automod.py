@@ -11,7 +11,7 @@ class AutoMod(commands.Cog):
         
     # Role management command
     @commands.hybrid_command(name="role", description="Add or remove a role from a member")
-    @app_commands.checks.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @app_commands.describe(member="The member to modify", role="The role to add or remove")
     async def role(self, ctx: commands.Context, member: discord.Member, role: discord.Role):
         if role >= ctx.guild.me.top_role:
@@ -33,7 +33,7 @@ class AutoMod(commands.Cog):
                 await ctx.send(f"Failed to add role: {e}", ephemeral=True)
                 
     @commands.hybrid_command(name="purge", description="Clears messages with optional filters (user or text)")
-    @app_commands.checks.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx: commands.Context, amount: int, member: discord.Member = None, contains: str = None):
         # 1. Defer because purging can take more than 3 seconds
         await ctx.defer(ephemeral=True)
@@ -77,7 +77,7 @@ class AutoMod(commands.Cog):
             
     # Slowmode command
     @commands.hybrid_command(name="slowmode", description="Set the channel slowmode")
-    @app_commands.checks.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     async def slowmode(self, ctx, seconds: int):
         try:
             await ctx.channel.edit(slowmode_delay=seconds)
@@ -88,7 +88,7 @@ class AutoMod(commands.Cog):
             
     # Kick command   
     @commands.hybrid_command(name="kick", description="Kicks a member from the server")
-    @app_commands.checks.has_permissions(kick_members=True)
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, reason: str = "No reason provided"):
         if member.top_role >= ctx.me.top_role:
             return await ctx.send("I cannot kick this user; their role is higher than mine!", ephemeral=True)
@@ -102,7 +102,7 @@ class AutoMod(commands.Cog):
             
     # Ban command
     @commands.hybrid_command(name="ban", description="Bans a member from the server")
-    @app_commands.checks.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, reason: str = "No reason provided"):
         if member.top_role >= ctx.me.top_role:
             return await ctx.send("I cannot ban this user; their role is higher than mine!", ephemeral=True)
@@ -116,7 +116,7 @@ class AutoMod(commands.Cog):
             
     # Timeout command
     @commands.hybrid_command(name="timeout", description="Timeout a member for a specific duration")
-    @app_commands.checks.has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx, member: discord.Member, minutes: int, reason: str = "No reason provided"):
         duration = datetime.timedelta(minutes=minutes)
         try:
@@ -129,4 +129,5 @@ class AutoMod(commands.Cog):
             await ctx.send(f"Failed to timeout user: {e}", ephemeral=True)
         
 async def setup(client):
+
     await client.add_cog(AutoMod(client=client))
