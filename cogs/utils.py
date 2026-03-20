@@ -418,6 +418,67 @@ class Utils(commands.Cog):
         
         # Return only the first 25 (Discord's hard limit)
         return choices[:25]
+
+    
+    @commands.hybrid_command(name="debug", description="Checks which commands you have permission to run smoothly.")
+    @app_commands.guild_only() # Recommended for permission-heavy checks
+    async def audit_perms(self, ctx: commands.Context):
+        # We defer the response because looping through all commands 
+        # and running can_run() can take longer than the 3-second Slash limit.
+        await ctx.defer(ephemeral=True)
+
+        passed = []
+        failed_info = []
+
+        # Iterate through all registered commands (including hybrid ones)
+        for command in self.bot.walk_commands():
+            # Skip the audit command itself and the help command
+            if command.name in ["audit_perms", "help"] or command.hidden:
+                continue
+                
+            # We only want to check base commands, not every sub-command 
+            # unless you want a very long list.
+            if isinstance(command, commands.Group):
+                continue
+
+            try:
+                # can_run() checks: @has_permissions, @is_owner, @check, etc.
+                await command.can_run(ctx)
+                passed.append(f"`{command.qualified_name}`")
+            except commands.CommandError as e:
+                # This identifies the specific reason it won't run "smoothly"
+                failed_info.append(f"**{command.qualified_name}**: {e}")
+            except Exception as e:
+                # This catches code-level bugs in the check logic itself
+                failed_info.append(f"**{command.qualified_name}**: System Error ({e})")
+
+        # Construct the Embed
+        embed = discord.Embed(
+            title=f"Permission Audit: {ctx.author.display_name}",
+            color=discord.Color.blue(),
+            timestamp=ctx.message.created_at if ctx.message else None
+        )
+
+        embed.add_field(
+            name=f"✅ Ready to Run ({len(passed)})",
+            value=", ".join(passed) if passed else "None",
+            inline=False
+        )
+
+        if failed_info:
+            # Join errors with newlines, limiting length to avoid Embed limits (1024 chars)
+            error_text = "\n".join(failed_info)
+            if len(error_text) > 1024:
+                error_text = error_text[:1020] + "..."
+                
+            embed.add_field(
+                name=f"❌ Restricted/Blocked ({len(failed_info)})",
+                value=error_text,
+                inline=False
+            )
+
+        # Since we used defer(), we use followups or send (hybrid handles both)
+        await ctx.send(embed=embed)
             
     
             
